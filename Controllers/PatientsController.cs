@@ -12,10 +12,17 @@ namespace BelshefaaApp.Controllers
     public class PatientsController : ControllerBase
     {
         private readonly IPatientService _patientService;
+        private readonly IActivityLogService _activityLogService;
+        private readonly IMedicationService _medicationService;
 
-        public PatientsController(IPatientService patientService)
+        public PatientsController(
+            IPatientService patientService,
+            IActivityLogService activityLogService,
+            IMedicationService medicationService)
         {
             _patientService = patientService;
+            _activityLogService = activityLogService;
+            _medicationService = medicationService;
         }
 
         [HttpGet]
@@ -81,6 +88,34 @@ namespace BelshefaaApp.Controllers
 
             var deleted = await _patientService.DeleteAsync(accountId.Value, id, cancellationToken);
             return deleted ? NoContent() : NotFound();
+        }
+
+        [HttpGet("{id:int}/logs")]
+        public async Task<ActionResult<IReadOnlyList<ActivityLogDto>>> GetLogs(int id, CancellationToken cancellationToken)
+        {
+            var accountId = GetAccountId();
+            if (accountId is null)
+            {
+                return Unauthorized();
+            }
+
+            var logs = await _activityLogService.GetPatientLogsAsync(accountId.Value, id, cancellationToken);
+            return Ok(logs);
+        }
+
+        [HttpPost("{id:int}/medication-given")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> AdministerMedication(int id, AdministerMedicationDto dto, CancellationToken cancellationToken)
+        {
+            var accountId = GetAccountId();
+            if (accountId is null)
+            {
+                return Unauthorized();
+            }
+
+            var administered = await _medicationService.AdministerAsync(accountId.Value, id, dto, cancellationToken);
+            return administered ? StatusCode(StatusCodes.Status201Created) : NotFound();
         }
 
         private int? GetAccountId()

@@ -14,6 +14,12 @@ namespace BelshefaaApp.Database.Data
 
         public DbSet<Patient> Patients => Set<Patient>();
 
+        public DbSet<Carer> Carers => Set<Carer>();
+
+        public DbSet<Medication> Medications => Set<Medication>();
+
+        public DbSet<ActivityLog> ActivityLogs => Set<ActivityLog>();
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

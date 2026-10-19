@@ -15,9 +15,12 @@ namespace BelshefaaApp.Database
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
-            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IPatientRepository, PatientRepository>();
+            services.AddScoped<ICarerRepository, CarerRepository>();
+            services.AddScoped<IMedicationRepository, MedicationRepository>();
+            services.AddScoped<IActivityLogRepository, ActivityLogRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;

@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BelshefaaApp.Database.Repositories
 {
-    public class EfRepository<T> : IRepository<T> where T : EntityBase
+    public class GenericRepository<T> : IGenericRepository<T> where T : EntityBase
     {
         protected DbSet<T> DbSet { get; }
 
-        public EfRepository(AppDbContext context)
+        public GenericRepository(AppDbContext context)
         {
             DbSet = context.Set<T>();
         }

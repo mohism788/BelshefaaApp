@@ -1,14 +1,13 @@
 ﻿namespace BelshefaaApp.Core.Entities
 {
-    public class Carer
+    public class Carer : EntityBase
     {
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string Relationship { get; set; } = string.Empty;
+        public int AccountId { get; set; }
 
-        public string Role { get; set; } = "Standard";
-        public List<Patient> Patients { get; set; } = new List<Patient>();
+        public Account Account { get; set; } = null!;
 
+        public required string FullName { get; set; }
 
+        public string? PhoneNumber { get; set; }
     }
 }

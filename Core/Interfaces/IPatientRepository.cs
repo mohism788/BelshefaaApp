@@ -2,7 +2,7 @@ using BelshefaaApp.Core.Entities;
 
 namespace BelshefaaApp.Core.Interfaces
 {
-    public interface IPatientRepository : IRepository<Patient>
+    public interface IPatientRepository : IGenericRepository<Patient>
     {
         Task<IReadOnlyList<Patient>> ListByAccountAsync(int accountId, CancellationToken cancellationToken = default);
 

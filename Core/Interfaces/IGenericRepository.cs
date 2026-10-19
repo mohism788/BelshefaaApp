@@ -3,7 +3,7 @@ using BelshefaaApp.Core.Entities;
 
 namespace BelshefaaApp.Core.Interfaces
 {
-    public interface IRepository<T> where T : EntityBase
+    public interface IGenericRepository<T> where T : EntityBase
     {
         Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
 

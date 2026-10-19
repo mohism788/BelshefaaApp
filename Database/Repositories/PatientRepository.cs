@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BelshefaaApp.Database.Repositories
 {
-    public class PatientRepository : EfRepository<Patient>, IPatientRepository
+    public class PatientRepository : GenericRepository<Patient>, IPatientRepository
     {
         public PatientRepository(AppDbContext context)
             : base(context)

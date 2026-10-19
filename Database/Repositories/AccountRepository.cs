@@ -4,7 +4,7 @@ using BelshefaaApp.Database.Data;
 
 namespace BelshefaaApp.Database.Repositories
 {
-    public class AccountRepository : EfRepository<Account>, IAccountRepository
+    public class AccountRepository : GenericRepository<Account>, IAccountRepository
     {
         public AccountRepository(AppDbContext context)
             : base(context)
