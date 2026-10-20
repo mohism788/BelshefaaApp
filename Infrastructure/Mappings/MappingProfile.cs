@@ -20,8 +20,8 @@ namespace BelshefaaApp.Infrastructure.Mappings
                 .ForMember(d => d.NationalId, o => o.MapFrom(s => string.IsNullOrWhiteSpace(s.NationalId) ? null : s.NationalId.Trim()))
                 .ForMember(d => d.PhoneNumber, o => o.MapFrom(s => s.PhoneNumber.Trim()))
                 .ForMember(d => d.Email, o => o.MapFrom(s => s.Email == null ? null : s.Email.Trim().ToLowerInvariant()))
-                .ForMember(d => d.Address, o => o.MapFrom(s => s.Address == null ? null : s.Address.Trim()))
-                .ForMember(d => d.Notes, o => o.MapFrom(s => s.Notes == null ? null : s.Notes.Trim()));
+                .ForMember(d => d.Address, o => o.MapFrom(s => string.IsNullOrWhiteSpace(s.Address) ? null : s.Address.Trim()))
+                .ForMember(d => d.Notes, o => o.MapFrom(s => string.IsNullOrWhiteSpace(s.Notes) ? null : s.Notes.Trim()));
 
             CreateMap<UpdatePatientDto, Patient>()
                 .ForMember(d => d.Id, o => o.Ignore())
@@ -33,8 +33,8 @@ namespace BelshefaaApp.Infrastructure.Mappings
                 .ForMember(d => d.NationalId, o => o.MapFrom(s => string.IsNullOrWhiteSpace(s.NationalId) ? null : s.NationalId.Trim()))
                 .ForMember(d => d.PhoneNumber, o => o.MapFrom(s => s.PhoneNumber.Trim()))
                 .ForMember(d => d.Email, o => o.MapFrom(s => s.Email == null ? null : s.Email.Trim().ToLowerInvariant()))
-                .ForMember(d => d.Address, o => o.MapFrom(s => s.Address == null ? null : s.Address.Trim()))
-                .ForMember(d => d.Notes, o => o.MapFrom(s => s.Notes == null ? null : s.Notes.Trim()));
+                .ForMember(d => d.Address, o => o.MapFrom(s => string.IsNullOrWhiteSpace(s.Address) ? null : s.Address.Trim()))
+                .ForMember(d => d.Notes, o => o.MapFrom(s => string.IsNullOrWhiteSpace(s.Notes) ? null : s.Notes.Trim()));
 
             CreateMap<Carer, CarerDto>();
 
@@ -57,9 +57,19 @@ namespace BelshefaaApp.Infrastructure.Mappings
                 .ForMember(d => d.Description, o => o.MapFrom(s => string.IsNullOrWhiteSpace(s.Description) ? null : s.Description.Trim()));
 
             CreateMap<ActivityLog, ActivityLogDto>()
-                .ForMember(d => d.PatientName, o => o.MapFrom(s => s.Patient == null ? null : $"{s.Patient.FirstName} {s.Patient.LastName}"))
-                .ForMember(d => d.CarerName, o => o.MapFrom(s => s.Carer == null ? null : s.Carer.FullName))
-                .ForMember(d => d.MedicationName, o => o.MapFrom(s => s.Medication == null ? null : s.Medication.Name));
+                .ConstructUsing(log => new ActivityLogDto(
+                    log.Id,
+                    log.Action,
+                    log.PatientId,
+                    log.Patient == null ? null : $"{log.Patient.FirstName} {log.Patient.LastName}",
+                    log.CarerId,
+                    log.Carer == null ? null : log.Carer.FullName,
+                    log.MedicationId,
+                    log.Medication == null ? null : log.Medication.Name,
+                    log.Details,
+                    log.CreatedAt))
+                .ForMember(d => d.PatientName, o => o.Ignore())
+                .ForMember(d => d.CarerName, o => o.Ignore());
         }
     }
 }
