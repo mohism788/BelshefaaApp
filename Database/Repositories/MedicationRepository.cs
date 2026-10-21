@@ -19,6 +19,13 @@ namespace BelshefaaApp.Database.Repositories
                 .ToListAsync(cancellationToken);
         }
 
+        public async Task<Medication?> FindOwnedAsync(int accountId, int id, CancellationToken cancellationToken = default)
+        {
+            return await DbSet.FirstOrDefaultAsync(
+                m => m.AccountId == accountId && m.Id == id,
+                cancellationToken);
+        }
+
         public async Task<Medication?> GetByNameAsync(int accountId, string name, CancellationToken cancellationToken = default)
         {
             return await DbSet.FirstOrDefaultAsync(

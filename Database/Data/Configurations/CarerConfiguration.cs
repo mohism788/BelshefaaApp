@@ -19,6 +19,15 @@ namespace BelshefaaApp.Database.Data.Configurations
             builder.Property(c => c.PhoneNumber)
                 .HasMaxLength(20);
 
+            builder.Property(c => c.PasscodeHash)
+                .HasMaxLength(512)
+                .IsRequired();
+
+            builder.Property(c => c.Relationship)
+                .HasConversion<string>()
+                .HasMaxLength(20)
+                .IsRequired();
+
             builder.HasOne(c => c.Account)
                 .WithMany()
                 .HasForeignKey(c => c.AccountId)

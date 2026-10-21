@@ -10,6 +10,8 @@ namespace BelshefaaApp.Core.Entities
 
         public bool IsActive { get; set; } = true;
 
+        public AccountRole Role { get; set; } = AccountRole.Member;
+
         public ICollection<Patient> Patients { get; set; } = [];
     }
 }

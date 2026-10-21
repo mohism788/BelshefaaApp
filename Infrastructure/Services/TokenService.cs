@@ -30,6 +30,7 @@ namespace BelshefaaApp.Infrastructure.Services
                 new(JwtRegisteredClaimNames.Sub, account.Id.ToString()),
                 new(JwtRegisteredClaimNames.Email, account.Email),
                 new("name", account.FullName),
+                new("role", account.Role.ToString()),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 

@@ -9,5 +9,9 @@
         public required string FullName { get; set; }
 
         public string? PhoneNumber { get; set; }
+
+        public required string PasscodeHash { get; set; }
+
+        public CarerRelationship Relationship { get; set; } = CarerRelationship.FamilyMember;
     }
 }

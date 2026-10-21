@@ -33,12 +33,12 @@ namespace BelshefaaApp.Database.Data.Configurations
             builder.HasOne(l => l.Carer)
                 .WithMany()
                 .HasForeignKey(l => l.CarerId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasOne(l => l.Medication)
                 .WithMany()
                 .HasForeignKey(l => l.MedicationId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasIndex(l => l.PatientId);
 

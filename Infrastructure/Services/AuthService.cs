@@ -30,11 +30,14 @@ namespace BelshefaaApp.Infrastructure.Services
                 return null;
             }
 
+            var isFirstAccount = !await _accountRepository.AnyAsync(a => true, cancellationToken);
+
             var account = new Account
             {
                 Email = email,
                 PasswordHash = PasswordHasher.Hash(dto.Password),
                 FullName = dto.FullName.Trim(),
+                Role = isFirstAccount ? AccountRole.Admin : AccountRole.Member,
             };
 
             await _accountRepository.AddAsync(account, cancellationToken);
@@ -64,6 +67,7 @@ namespace BelshefaaApp.Infrastructure.Services
                 account.Id,
                 account.Email,
                 account.FullName,
+                account.Role.ToString(),
                 token.Token,
                 token.ExpiresAtUtc);
         }

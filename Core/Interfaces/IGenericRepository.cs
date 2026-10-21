@@ -11,6 +11,8 @@ namespace BelshefaaApp.Core.Interfaces
 
         Task<IReadOnlyList<T>> ListAsync(CancellationToken cancellationToken = default);
 
+        Task<bool> AnyAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default);
+
         Task AddAsync(T entity, CancellationToken cancellationToken = default);
 
         void Update(T entity);

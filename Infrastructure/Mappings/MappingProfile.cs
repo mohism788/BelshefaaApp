@@ -1,6 +1,7 @@
 using AutoMapper;
 using BelshefaaApp.Core.Dtos;
 using BelshefaaApp.Core.Entities;
+using BelshefaaApp.Infrastructure.Services;
 
 namespace BelshefaaApp.Infrastructure.Mappings
 {
@@ -44,11 +45,33 @@ namespace BelshefaaApp.Infrastructure.Mappings
                 .ForMember(d => d.Account, o => o.Ignore())
                 .ForMember(d => d.AccountId, o => o.Ignore())
                 .ForMember(d => d.FullName, o => o.MapFrom(s => s.FullName.Trim()))
-                .ForMember(d => d.PhoneNumber, o => o.MapFrom(s => string.IsNullOrWhiteSpace(s.PhoneNumber) ? null : s.PhoneNumber.Trim()));
+                .ForMember(d => d.PhoneNumber, o => o.MapFrom(s => string.IsNullOrWhiteSpace(s.PhoneNumber) ? null : s.PhoneNumber.Trim()))
+                .ForMember(d => d.PasscodeHash, o => o.MapFrom(s => PasswordHasher.Hash(s.Passcode)));
+
+            CreateMap<UpdateCarerDto, Carer>()
+                .ForMember(d => d.Id, o => o.Ignore())
+                .ForMember(d => d.CreatedAt, o => o.Ignore())
+                .ForMember(d => d.Account, o => o.Ignore())
+                .ForMember(d => d.AccountId, o => o.Ignore())
+                .ForMember(d => d.FullName, o => o.MapFrom(s => s.FullName.Trim()))
+                .ForMember(d => d.PhoneNumber, o => o.MapFrom(s => string.IsNullOrWhiteSpace(s.PhoneNumber) ? null : s.PhoneNumber.Trim()))
+                .ForMember(d => d.PasscodeHash, o =>
+                {
+                    o.PreCondition(s => s.Passcode != null);
+                    o.MapFrom(s => PasswordHasher.Hash(s.Passcode!));
+                });
 
             CreateMap<Medication, MedicationDto>();
 
             CreateMap<CreateMedicationDto, Medication>()
+                .ForMember(d => d.Id, o => o.Ignore())
+                .ForMember(d => d.CreatedAt, o => o.Ignore())
+                .ForMember(d => d.Account, o => o.Ignore())
+                .ForMember(d => d.AccountId, o => o.Ignore())
+                .ForMember(d => d.Name, o => o.MapFrom(s => s.Name.Trim()))
+                .ForMember(d => d.Description, o => o.MapFrom(s => string.IsNullOrWhiteSpace(s.Description) ? null : s.Description.Trim()));
+
+            CreateMap<UpdateMedicationDto, Medication>()
                 .ForMember(d => d.Id, o => o.Ignore())
                 .ForMember(d => d.CreatedAt, o => o.Ignore())
                 .ForMember(d => d.Account, o => o.Ignore())

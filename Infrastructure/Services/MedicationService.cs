@@ -61,6 +61,42 @@ namespace BelshefaaApp.Infrastructure.Services
             return _mapper.Map<MedicationDto>(medication);
         }
 
+        public async Task<MedicationDto?> UpdateAsync(int accountId, int id, UpdateMedicationDto dto, CancellationToken cancellationToken = default)
+        {
+            var medication = await _medicationRepository.FindOwnedAsync(accountId, id, cancellationToken);
+            if (medication is null)
+            {
+                return null;
+            }
+
+            var duplicate = await _medicationRepository.GetByNameAsync(accountId, dto.Name.Trim(), cancellationToken);
+            if (duplicate is not null && duplicate.Id != medication.Id)
+            {
+                return null;
+            }
+
+            _mapper.Map(dto, medication);
+
+            _medicationRepository.Update(medication);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            return _mapper.Map<MedicationDto>(medication);
+        }
+
+        public async Task<bool> DeleteAsync(int accountId, int id, CancellationToken cancellationToken = default)
+        {
+            var medication = await _medicationRepository.FindOwnedAsync(accountId, id, cancellationToken);
+            if (medication is null)
+            {
+                return false;
+            }
+
+            _medicationRepository.Remove(medication);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            return true;
+        }
+
         public async Task<bool> AdministerAsync(int accountId, int patientId, AdministerMedicationDto dto, CancellationToken cancellationToken = default)
         {
             var patient = await _patientRepository.FindOwnedAsync(accountId, patientId, cancellationToken);

@@ -47,5 +47,35 @@ namespace BelshefaaApp.Infrastructure.Services
 
             return _mapper.Map<CarerDto>(carer);
         }
+
+        public async Task<CarerDto?> UpdateAsync(int accountId, int id, UpdateCarerDto dto, CancellationToken cancellationToken = default)
+        {
+            var carer = await _carerRepository.FindOwnedAsync(accountId, id, cancellationToken);
+            if (carer is null)
+            {
+                return null;
+            }
+
+            _mapper.Map(dto, carer);
+
+            _carerRepository.Update(carer);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            return _mapper.Map<CarerDto>(carer);
+        }
+
+        public async Task<bool> DeleteAsync(int accountId, int id, CancellationToken cancellationToken = default)
+        {
+            var carer = await _carerRepository.FindOwnedAsync(accountId, id, cancellationToken);
+            if (carer is null)
+            {
+                return false;
+            }
+
+            _carerRepository.Remove(carer);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            return true;
+        }
     }
 }

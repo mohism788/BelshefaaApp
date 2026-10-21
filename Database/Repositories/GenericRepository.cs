@@ -30,6 +30,11 @@ namespace BelshefaaApp.Database.Repositories
             return await DbSet.AsNoTracking().ToListAsync(cancellationToken);
         }
 
+        public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+        {
+            return await DbSet.AnyAsync(predicate, cancellationToken);
+        }
+
         public async Task AddAsync(T entity, CancellationToken cancellationToken = default)
         {
             await DbSet.AddAsync(entity, cancellationToken);

@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using BelshefaaApp.Core.Dtos;
 using BelshefaaApp.Core.Interfaces;
+using BelshefaaApp.Infrastructure.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -52,6 +53,7 @@ namespace BelshefaaApp.Controllers
         }
 
         [HttpPost]
+        [RequireAdminCarer]
         public async Task<ActionResult<PatientDto>> Create(CreatePatientDto dto, CancellationToken cancellationToken)
         {
             var accountId = GetAccountId();
@@ -65,6 +67,7 @@ namespace BelshefaaApp.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [RequireAdminCarer]
         public async Task<ActionResult<PatientDto>> Update(int id, UpdatePatientDto dto, CancellationToken cancellationToken)
         {
             var accountId = GetAccountId();
@@ -78,6 +81,7 @@ namespace BelshefaaApp.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [RequireAdminCarer]
         public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
         {
             var accountId = GetAccountId();
@@ -104,6 +108,7 @@ namespace BelshefaaApp.Controllers
         }
 
         [HttpPost("{id:int}/medication-given")]
+        [RequireAdminCarer]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> AdministerMedication(int id, AdministerMedicationDto dto, CancellationToken cancellationToken)

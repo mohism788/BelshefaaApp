@@ -6,6 +6,8 @@ namespace BelshefaaApp.Core.Interfaces
     {
         Task<IReadOnlyList<Medication>> ListByAccountAsync(int accountId, CancellationToken cancellationToken = default);
 
+        Task<Medication?> FindOwnedAsync(int accountId, int id, CancellationToken cancellationToken = default);
+
         Task<Medication?> GetByNameAsync(int accountId, string name, CancellationToken cancellationToken = default);
     }
 }

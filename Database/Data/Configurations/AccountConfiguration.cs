@@ -24,6 +24,11 @@ namespace BelshefaaApp.Database.Data.Configurations
                 .HasMaxLength(100)
                 .IsRequired();
 
+            builder.Property(a => a.Role)
+                .HasConversion<string>()
+                .HasMaxLength(20)
+                .IsRequired();
+
             builder.HasIndex(a => a.Email)
                 .IsUnique();
         }

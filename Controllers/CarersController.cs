@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using BelshefaaApp.Core.Dtos;
 using BelshefaaApp.Core.Interfaces;
+using BelshefaaApp.Infrastructure.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,6 +33,7 @@ namespace BelshefaaApp.Controllers
         }
 
         [HttpPost]
+        [RequireAdminCarer(AllowWhenNoCarers = true)]
         public async Task<ActionResult<CarerDto>> Create(CreateCarerDto dto, CancellationToken cancellationToken)
         {
             var accountId = GetAccountId();
@@ -42,6 +44,34 @@ namespace BelshefaaApp.Controllers
 
             var carer = await _carerService.CreateAsync(accountId.Value, dto, cancellationToken);
             return CreatedAtAction(nameof(GetAll), carer);
+        }
+
+        [HttpPut("{id:int}")]
+        [RequireAdminCarer]
+        public async Task<ActionResult<CarerDto>> Update(int id, UpdateCarerDto dto, CancellationToken cancellationToken)
+        {
+            var accountId = GetAccountId();
+            if (accountId is null)
+            {
+                return Unauthorized();
+            }
+
+            var carer = await _carerService.UpdateAsync(accountId.Value, id, dto, cancellationToken);
+            return carer is null ? NotFound() : Ok(carer);
+        }
+
+        [HttpDelete("{id:int}")]
+        [RequireAdminCarer]
+        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
+        {
+            var accountId = GetAccountId();
+            if (accountId is null)
+            {
+                return Unauthorized();
+            }
+
+            var deleted = await _carerService.DeleteAsync(accountId.Value, id, cancellationToken);
+            return deleted ? NoContent() : NotFound();
         }
 
         private int? GetAccountId()
