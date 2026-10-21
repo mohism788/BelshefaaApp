@@ -7,19 +7,13 @@ namespace BelshefaaApp.Infrastructure.Services
 {
     public sealed class ActivityLogService : IActivityLogService
     {
-        private readonly IActivityLogRepository _logRepository;
-        private readonly IPatientRepository _patientRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
         public ActivityLogService(
-            IActivityLogRepository logRepository,
-            IPatientRepository patientRepository,
             IUnitOfWork unitOfWork,
             IMapper mapper)
         {
-            _logRepository = logRepository;
-            _patientRepository = patientRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -43,25 +37,25 @@ namespace BelshefaaApp.Infrastructure.Services
                 Details = details,
             };
 
-            await _logRepository.AddAsync(log, cancellationToken);
+            await _unitOfWork.ActivityLogs.AddAsync(log, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<IReadOnlyList<ActivityLogDto>> GetPatientLogsAsync(int accountId, int patientId, CancellationToken cancellationToken = default)
         {
-            var patient = await _patientRepository.FindOwnedAsync(accountId, patientId, cancellationToken);
+            var patient = await _unitOfWork.Patients.FindOwnedAsync(accountId, patientId, cancellationToken);
             if (patient is null)
             {
                 return [];
             }
 
-            var logs = await _logRepository.ListByPatientAsync(patientId, cancellationToken);
+            var logs = await _unitOfWork.ActivityLogs.ListByPatientAsync(patientId, cancellationToken);
             return logs.Select(l => _mapper.Map<ActivityLogDto>(l)).ToList();
         }
 
         public async Task<IReadOnlyList<ActivityLogDto>> GetAllAsync(int accountId, CancellationToken cancellationToken = default)
         {
-            var logs = await _logRepository.ListByAccountAsync(accountId, cancellationToken);
+            var logs = await _unitOfWork.ActivityLogs.ListByAccountAsync(accountId, cancellationToken);
             return logs.Select(l => _mapper.Map<ActivityLogDto>(l)).ToList();
         }
     }

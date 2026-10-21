@@ -7,10 +7,31 @@ namespace BelshefaaApp.Database.Repositories
     {
         private readonly AppDbContext _context;
 
-        public UnitOfWork(AppDbContext context)
+        public UnitOfWork(
+            AppDbContext context,
+            IAccountRepository accounts,
+            IPatientRepository patients,
+            ICarerRepository carers,
+            IMedicationRepository medications,
+            IActivityLogRepository activityLogs)
         {
             _context = context;
+            Accounts = accounts;
+            Patients = patients;
+            Carers = carers;
+            Medications = medications;
+            ActivityLogs = activityLogs;
         }
+
+        public IAccountRepository Accounts { get; }
+
+        public IPatientRepository Patients { get; }
+
+        public ICarerRepository Carers { get; }
+
+        public IMedicationRepository Medications { get; }
+
+        public IActivityLogRepository ActivityLogs { get; }
 
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
